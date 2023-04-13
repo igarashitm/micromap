@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.micromap</groupId>
+        <artifactId>micromap</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>buildtools</artifactId>
+
+    <properties>
+        <version.gmavenplus-plugin>2.1.0</version.gmavenplus-plugin>
+        <version.groovy>4.0.9</version.groovy>
+        <version.maven-remote-resources-plugin>1.7.0</version.maven-remote-resources-plugin>
+        <version.maven-resources-plugin>3.2.0</version.maven-resources-plugin>
+        <version.mycila-license>3.0</version.mycila-license>
+    </properties>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <artifactId>maven-remote-resources-plugin</artifactId>
+                <version>${version.maven-remote-resources-plugin}</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin><!--
+                     This updates header-*.txt with the content of
+                     header.txt and the appropriate formatting for
+                     the specific style.
+                     So edit header.txt (if you must) and header-*
+                     files in src/main/resources will be updated.
+                -->
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>${version.mycila-license}</version>
+                <executions>
+                    <execution>
+                        <id>default-cli</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                        <configuration>
+                            <header>src/main/resources/header.txt</header>
+                            <includes>
+                                <include>**/header-java.txt</include>
+                                <include>**/header-xml.txt</include>
+                            </includes>
+                            <mapping>
+                                <header-java.txt>SLASHSTAR_STYLE</header-java.txt>
+                                <header-xml.txt>XML_STYLE</header-xml.txt>
+                            </mapping>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -1,0 +1,30 @@
+name: 'Build'
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    if: ${{ github.repository == 'igarashitm/micromap' }}
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up Java versions
+        uses: actions/setup-java@v2
+        with:
+          java-version: 19
+          distribution: 'temurin'
+      - name: Cache Maven repo
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Build
+        run: mvn clean install

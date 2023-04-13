@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2023 Red Hat, Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.micromap</groupId>
+        <artifactId>micromap</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>parent</artifactId>
+    <packaging>pom</packaging>
+
+    <properties>
+        <checkstyle.failOnViolation>true</checkstyle.failOnViolation>
+        <version.checkstyle>10.9.3</version.checkstyle>
+        <version.gmavenplus-plugin>2.1.0</version.gmavenplus-plugin>
+        <version.groovy>4.0.9</version.groovy>
+        <version.jackson>2.14.2</version.jackson>
+        <version.jackson-jq>1.0.0-preview.20230409</version.jackson-jq>
+        <version.junit>5.9.2</version.junit>
+        <version.license-maven-plugin>4.2</version.license-maven-plugin>
+        <version.maven-checkstyle-plugin>3.1.2</version.maven-checkstyle-plugin>
+        <version.maven-surefire-plugin>3.0.0</version.maven-surefire-plugin>
+        <version.spock-core>2.3-groovy-4.0</version.spock-core>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Internal -->
+            <dependency>
+                <groupId>io.micromap</groupId>
+                <artifactId>buildtools</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.micromap</groupId>
+                <artifactId>core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.micromap</groupId>
+                <artifactId>model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- Thirdparty -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${version.jackson}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-jsonSchema</artifactId>
+                <version>${version.jackson}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${version.jackson}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${version.jackson}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.thisptr</groupId>
+                <artifactId>jackson-jq</artifactId>
+                <version>${version.jackson-jq}</version>
+            </dependency>
+
+            <!-- Tests -->
+            <dependency>
+                <groupId>org.apache.groovy</groupId>
+                <artifactId>groovy</artifactId>
+                <version>${version.groovy}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.groovy</groupId>
+                <artifactId>groovy-test-junit5</artifactId>
+                <version>${version.groovy}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${version.junit}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.spockframework</groupId>
+                <artifactId>spock-core</artifactId>
+                <scope>test</scope>
+                <version>${version.spock-core}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>junit</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.gmavenplus</groupId>
+                    <artifactId>gmavenplus-plugin</artifactId>
+                    <version>${version.gmavenplus-plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${version.maven-surefire-plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${version.maven-checkstyle-plugin}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>io.micromap</groupId>
+                            <artifactId>buildtools</artifactId>
+                            <version>${project.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>${version.checkstyle}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+                <plugin>
+                    <groupId>com.mycila</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>${version.license-maven-plugin}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>io.micromap</groupId>
+                            <artifactId>buildtools</artifactId>
+                            <version>${project.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>addTestSources</goal>
+                            <goal>compileTests</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <invokeDynamic>true</invokeDynamic>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>license</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <licenseSets>
+                        <licenseSet>
+                            <header>header.txt</header>
+                            <excludes>
+                                <exclude>**/node_modules/**</exclude>
+                                <exclude>.editorconfig</exclude>
+                                <exclude>atlasmap-license-header.txt</exclude>
+                                <exclude>.mention-bot</exclude>
+                                <exclude>.mvn/wrapper/maven-wrapper.properties</exclude>
+                                <exclude>mvnw*</exclude>
+                                <exclude>**/resources/**/test-*</exclude>
+                                <exclude>**/*.mustache</exclude>
+                                <exclude>**/test/resources/**</exclude>
+                                <exclude>**/spring.factories</exclude>
+                                <exclude>**/*.adoc</exclude>
+                                <exclude>**/*.ts</exclude>
+                                <exclude>**/*.tsx</exclude>
+                                <exclude>**/*.css</exclude>
+                                <exclude>**/*.scss</exclude>
+                                <exclude>**/setupProxy.js</exclude>
+                                <exclude>ui/packages/**</exclude>
+                                <exclude>**/*.html</exclude>
+                                <exclude>**/config.json*</exclude>
+                                <exclude>**/.gitkeep</exclude>
+                                <exclude>**/*.webapp</exclude>
+                                <exclude>**/browserconfig.xml</exclude>
+                                <exclude>**/licenses/**/*</exclude>
+                            </excludes>
+                        </licenseSet>
+                    </licenseSets>
+                    <mapping>
+                        <java>SLASHSTAR_STYLE</java>
+                    </mapping>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-cli</id>
+                        <phase>validate</phase>
+                        <configuration>
+                            <includeResources>false</includeResources>
+                            <configLocation>checkstyle.xml</configLocation>
+                            <consoleOutput>true</consoleOutput>
+                            <failsOnError>${checkstyle.failOnViolation}</failsOnError>
+                            <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+                            <encoding>UTF-8</encoding>
+                            <sourceDirectories>
+                                <sourceDirectory>${basedir}/src</sourceDirectory>
+                            </sourceDirectories>
+                            <headerLocation>header-java.txt</headerLocation>
+                            <includes>**/*.java,**/*.groovy,**/*.properties,**/*.xml,**/*.xsd</includes>
+                            <excludes></excludes>
+                        </configuration>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
