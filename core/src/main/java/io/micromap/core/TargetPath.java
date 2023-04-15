@@ -15,28 +15,7 @@
  */
 package io.micromap.core;
 
-import io.micromap.model.Json;
-import io.micromap.model.MappingDefinition;
-
-public class MicroMapContext {
-
-    private MappingDefinition mappingDefinition;
-    private QueryHandler queryHandler = new QueryHandler();
-
-    public MicroMapContext(String mappings) throws Exception {
-        mappingDefinition = Json.mapper().readValue(mappings, MappingDefinition.class);
+public class TargetPath {
+    public TargetPath(String query) {
     }
-
-    public MicroMapSession createSession() {
-        return new MicroMapSession(this);
-    }
-
-    public MappingDefinition getMappingDefinition() {
-        return mappingDefinition;
-    }
-
-    public QueryHandler getQueryHandler() {
-        return queryHandler;
-    }
-
 }

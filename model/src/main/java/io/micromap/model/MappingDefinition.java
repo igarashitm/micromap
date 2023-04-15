@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 @JsonRootName("MappingDefinition")
 public class MappingDefinition implements Serializable {
     @JsonProperty("Mappings")
-    private List<Mapping> mappings;
+    private List<Mapping> mappings = Collections.emptyList();
 
     /**
      * Gets the list of mappings.

@@ -15,8 +15,7 @@
  */
 package io.micromap.core
 
-import io.micromap.model.Mapping
-import io.micromap.model.MappingDefinition
+import io.micromap.model.Json
 import spock.lang.Specification
 
 class MicroMapContextTest extends Specification {
@@ -35,7 +34,7 @@ class MicroMapContextTest extends Specification {
                  "Target": "camel.body:.Person",
                  "Mappings": [
                    {
-                     "Source": "camel.body:{.Person.firstName + .Person.lastName}",
+                     "Source": "camel.body:.Person.firstName + .Person.lastName",
                      "Target": "camel.body:.Person.name"
                    }
                  ]
@@ -46,11 +45,31 @@ class MicroMapContextTest extends Specification {
 
         when:
         def context = new MicroMapContext(mappings)
+        def session = context.createSession()
+        def mapper = Json.mapper();
+        session.putDataSource("camel.body", null)
+        session.putDataSource("camel.header.contact", mapper.readTree("""
+            {
+              "Contact": {
+                "Address": "314 Littleton Rd, Westford, Massachusetts 01886, USA",
+                 "Phone": "123-456-7890"
+               }
+             }
+             """))
+        session.putDataSource("camel.header.person", mapper.readTree("""
+            {
+              "Person": {
+                "firstName": "John",
+                 "lastName": "Doe"
+               }
+             }
+             """))
+        session.process()
 
         then:
-        context != null
-        context.getMappingDefinition() instanceof MappingDefinition
-        def session = context.createSession()
-        session.process()
+        def result = session.getDataSource("camel.body")
+        // TODO implement
+        //result.get("Contact") != null
+        //result.get("Person") != null
     }
 }

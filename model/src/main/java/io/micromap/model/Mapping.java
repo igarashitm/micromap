@@ -26,15 +26,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class Mapping implements Serializable {
     @JsonProperty("Mappings")
-    private List<Mapping> mappings;
+    private List<Mapping> mappings = Collections.emptyList();
     @JsonProperty("Source")
     private String source;
-    @JsonProperty("SourceType")
-    private String sourceType;
     @JsonProperty("Target")
     private String target;
-    @JsonProperty("TargetType")
-    private String targetType;
 
     /**
      * Gets the list of mappings.
@@ -53,14 +49,6 @@ public class Mapping implements Serializable {
     }
 
     /**
-     *Gets the source type.
-     * @return The source type.
-     */
-    public String getSourceType() {
-        return sourceType;
-    }
-
-    /**
      * Gets the target path expression.
      * @return The target path expression.
      */
@@ -68,11 +56,4 @@ public class Mapping implements Serializable {
         return target;
     }
 
-    /**
-     * Gets the target type.
-     * @return The target type.
-     */
-    public String getTargetType() {
-        return targetType;
-    }
 }

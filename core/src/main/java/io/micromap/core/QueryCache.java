@@ -15,28 +15,22 @@
  */
 package io.micromap.core;
 
-import io.micromap.model.Json;
-import io.micromap.model.MappingDefinition;
+import java.lang.ref.SoftReference;
+import java.util.HashMap;
+import java.util.Map;
 
-public class MicroMapContext {
+import net.thisptr.jackson.jq.JsonQuery;
 
-    private MappingDefinition mappingDefinition;
-    private QueryHandler queryHandler = new QueryHandler();
+public class QueryCache {
+    private static final long serialVersionUID = 1L;
+    private Map<PathExpression, SoftReference<JsonQuery>> delegate = new HashMap<>();
 
-    public MicroMapContext(String mappings) throws Exception {
-        mappingDefinition = Json.mapper().readValue(mappings, MappingDefinition.class);
+    public JsonQuery get(PathExpression key) {
+        var ref = delegate.get(key);
+        return ref == null ? null : ref.get();
     }
 
-    public MicroMapSession createSession() {
-        return new MicroMapSession(this);
+    public void put(PathExpression key, JsonQuery value) {
+        delegate.put(key, new SoftReference<>(value));
     }
-
-    public MappingDefinition getMappingDefinition() {
-        return mappingDefinition;
-    }
-
-    public QueryHandler getQueryHandler() {
-        return queryHandler;
-    }
-
 }

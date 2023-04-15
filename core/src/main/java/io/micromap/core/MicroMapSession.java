@@ -16,40 +16,70 @@
 package io.micromap.core;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import io.micromap.model.MappingDefinition;
+import io.micromap.model.Mapping;
 
 public class MicroMapSession {
 
     private Map<String, JsonNode> dataSources = new HashMap<>();
-    private MappingDefinition mappingDefinition;
+    private MicroMapContext micromapContext;
 
     /**
      * Creates a new session.
-     * @param def The mapping definition.
+     * @param context The mapping context.
      */
-    public MicroMapSession(MappingDefinition def) {
-        mappingDefinition = def;
+    public MicroMapSession(MicroMapContext context) {
+        micromapContext = context;
     }
 
     /**
      * Processes data mapping.
      */
     public void process() {
+        micromapContext.getMappingDefinition().getMappings().forEach(mapping -> processMapping(mapping));
+    }
 
+    private void processMapping(Mapping mapping) {
+        var sourcePath = new PathExpression(mapping.getSource());
+        var sourceDocument = dataSources.get(sourcePath.getDataSource());
+        final List<JsonNode> outputs;
+        try {
+            outputs = micromapContext.getQueryHandler().readSource(sourcePath, sourceDocument);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
+        var targetPath = new PathExpression(mapping.getTarget());
+        var targetDocument = dataSources.get(targetPath.getDataSource());
+        var written = micromapContext.getQueryHandler().writeTarget(targetPath, targetDocument, outputs);
+        dataSources.put(targetPath.getDataSource(), written);
+
+        if (mapping.getMappings() != null) {
+            mapping.getMappings().forEach(subMapping -> processMapping(subMapping));
+        }
     }
 
     /**
-     * Adds a data source.
+     * Puts a data source.
      * @param key The data source key.
      * @param node The data source value.
      */
-    public void addDataSource(String key, JsonNode node) {
+    public void putDataSource(String key, JsonNode node) {
         dataSources.put(key, node);
     }
 
+    /**
+     * Gets a data source.
+     * @param key The data source key.
+     * @return The data source value.
+     */
+    public JsonNode getDataSource(String key) {
+        return dataSources.get(key);
+    }
 
 }
